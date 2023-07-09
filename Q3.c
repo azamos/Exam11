@@ -41,12 +41,14 @@ int vercmp(char* v1, char* v2){
 	int* v2_decon = deconstruct_ver(v2);
 	int v1_major = v1_decon[0];
 	int v2_major = v2_decon[0];
+	int v1_minor = v1_decon[1];
+	int v2_minor = v2_decon[1];
+	int v1_patch = v1_decon[2];
+	int v2_patch = v2_decon[2];
+	free(v1_decon);
+	free(v2_decon);
 	if (v1_major == v2_major) {
-		int v1_minor = v1_decon[1];
-		int v2_minor = v2_decon[1];
 		if(v1_minor==v2_minor){
-			int v1_patch = v1_decon[2];
-			int v2_patch = v2_decon[2];
 			if (v1_patch == v2_patch) {
 				return 0;
 			}
@@ -100,14 +102,15 @@ void OTAUpdate(TeslaDB* tesla, Location location, float radius, SoftwareUpdate u
 		TeslaCar* car = tesla->cars[i];
 		/*first, check if car is in radius from location,
 		and if udate.version is newer than current version car has installed*/
-		if (distance(car->location, location) <= radius &&
+		if (distance(car->location, location) <= radius && !car->numOfSoftwareUpdates ||
+			car->numOfSoftwareUpdates &&
 			vercmp(udate.softwareVersion,
 				car->software[car->numOfSoftwareUpdates - 1]>0)
 			) {
 			/*Now, check if one of the previously installed
 			software is the same as udate*/
 			for (int j = 0; j < car->numOfSoftwareUpdates; j++) {
-				if (vercmp(car->software[j], udate.softwareVersion) == 0) {
+				if (vercmp(car->software[j]->softwareVersion, udate.softwareVersion) == 0) {
 					return;//Updated is unnecesarry
 				}
 			}
@@ -118,12 +121,12 @@ void OTAUpdate(TeslaDB* tesla, Location location, float radius, SoftwareUpdate u
 				sizeof(SoftwareUpdate*) * (1+car->numOfSoftwareUpdates));
 			//create a deep-copy of udate. first, malloc:
 			SoftwareUpdate* newUpdate = (SoftwareUpdate*)malloc(sizeof(SoftwareUpdate));
-			strcpy_s(newUpdate->softwareVersion, sizeof(newUpdate->softwareVersion), udate.softwareVersion);
+			strcpy_s(newUpdate->softwareVersion, sizeof(udate.softwareVersion), udate.softwareVersion);
 			newUpdate->date.day = udate.date.day;
 			newUpdate->date.month = udate.date.month;
 			newUpdate->date.day = udate.date.year;
 			newUpdate->description = (char*)malloc(sizeof(char) * (1 + strlen(udate.description)));
-			strcpy_s(newUpdate->description,sizeof(newUpdate->description), udate.description);
+			strcpy_s(newUpdate->description,sizeof(udate.description), udate.description);
 			/*finally, add deep copy to car's swupdate list*/
 			car->software[car->numOfSoftwareUpdates++] = newUpdate;
 		}

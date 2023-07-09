@@ -27,9 +27,9 @@ int main()
         .plateNumber="111111111",.software=NULL,.type="model s",.yearOfManufacture=2019};
     TeslaCar tc2 = { .batteryLevel = 97,.color = "silver",.location = {.x = 1000,.y = 1000},.numOfSoftwareUpdates = 0,
         .plateNumber = "111111112",.software = NULL,.type = "model x",.yearOfManufacture = 2020 };
-    TeslaCar tc3 = { .batteryLevel = 100,.color = "black",.location = {.x = 10000,.y = 10000},.numOfSoftwareUpdates = 0,
+    TeslaCar tc3 = { .batteryLevel = 100,.color = "black",.location = {.x = 1100,.y = 1000},.numOfSoftwareUpdates = 0,
         .plateNumber = "111111113",.software = NULL,.type = "model t",.yearOfManufacture = 2021 };
-    //q1
+    //Q1 - A
     int sum = 0;
     sum += addNewCar(&tesla, tc1);
     sum += addNewCar(&tesla, tc2);
@@ -41,7 +41,16 @@ int main()
     if (sum != 3) {
         printf("error in q3.a: addNewCar is wrong");
     }
-    printf("\n%d cars were added to the array\n", sum);
+    printf("%d cars were added to the array\n", sum);
+    printf("\nq1-a test was a success\n");
+    //Q2-B
+    Location l1 = { .x = 10,.y = 10 };
+    Location l2 = { .x = 1001,.y = 1001 };
+    Location l3 = { .x = 1099, .y = 1000 };
+    OTAUpdate(&tesla, l1, 100, su1);//should only apply for TeslaCar tc1
+    OTAUpdate(&tesla, l2, sqrt(2), su7);//tc2
+    OTAUpdate(&tesla, l2, 100, su8);//for tc2 AND tc3
+    OTAUpdate(&tesla, l3, 1, su9);
     printf("done");
     return 0;
 }
