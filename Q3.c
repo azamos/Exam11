@@ -71,9 +71,9 @@ int addNewCar(TeslaDB* tesla, TeslaCar car)
 	/*Create a copyof teslaCar.*/
 	TeslaCar* newCar = (TeslaCar*)malloc(sizeof(TeslaCar));
 	newCar->type = (char*)malloc(sizeof(char) * (1 + strlen(car.type)));
-	strcpy(newCar->type, car.type);
+	strcpy_s(newCar->type,sizeof(newCar->type), car.type);
 	newCar->color = (char*)malloc(sizeof(char) * (1 + strlen(car.color)));
-	strcpy(newCar->plateNumber, car.plateNumber);
+	strcpy_s(newCar->plateNumber, sizeof(newCar->plateNumber), car.plateNumber);
 	newCar->yearOfManufacture = car.yearOfManufacture;
 	newCar->numOfSoftwareUpdates = car.numOfSoftwareUpdates;
 	newCar->batteryLevel = car.batteryLevel;
@@ -108,16 +108,16 @@ void OTAUpdate(TeslaDB* tesla, Location location, float radius, SoftwareUpdate u
 			//if program reaches here, we need to update:
 
 			/*reallocate*/
-			car->software = (SoftwareUpdate**)realoc(car->software,
+			car->software = (SoftwareUpdate**)realloc(car->software,
 				sizeof(SoftwareUpdate*) * (1+car->numOfSoftwareUpdates));
 			//create a deep-copy of udate. first, malloc:
 			SoftwareUpdate* newUpdate = (SoftwareUpdate*)malloc(sizeof(SoftwareUpdate));
-			strcpy(newUpdate->softwareVersion, udate.softwareVersion);
+			strcpy_s(newUpdate->softwareVersion, sizeof(newUpdate->softwareVersion), udate.softwareVersion);
 			newUpdate->date.day = udate.date.day;
 			newUpdate->date.month = udate.date.month;
 			newUpdate->date.day = udate.date.year;
 			newUpdate->description = (char*)malloc(sizeof(char) * (1 + strlen(udate.description)));
-			strcpy(newUpdate->description, udate.description);
+			strcpy_s(newUpdate->description,sizeof(newUpdate->description), udate.description);
 			/*finally, add deep copy to car's swupdate list*/
 			car->software[car->numOfSoftwareUpdates++] = newUpdate;
 		}
