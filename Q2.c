@@ -7,5 +7,16 @@ int replaceDigit(int num)
 	/******************************/
 	
 	/*Write your code down here*/	
-	return (-1);
+	if (num == 0) {
+		return 0;
+	}
+	int d = num % 10;
+	int new_d;
+	if(d){
+		new_d = d % 2 ? d - 1 : d - 2;
+	}
+	else {
+		new_d = 9;
+	}
+	return new_d + 10 * replaceDigit(num / 10);
 }
