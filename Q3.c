@@ -25,7 +25,7 @@ int* deconstruct_ver(char* str) {
 	int* deconstructed = (int*)malloc(sizeof(int) * 3);
 	int i = 2;
 	for(int j= 0; j<3;j++){
-		while (i < 20 && str[i] != '.') {
+		while (i < 20 && str[i] != '.' && str[i]!='\n') {
 			i++;
 		}
 		deconstructed[j] = subver_to_int(str, i - 1);
