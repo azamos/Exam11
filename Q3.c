@@ -62,9 +62,11 @@ int addNewCar(TeslaDB* tesla, TeslaCar car)
 	int i = 0;
 	while (i < tesla->numCars) {
 		TeslaCar* existing_car = tesla->cars[i];
-		if(strcmp(car.plateNumber,existing_car->plateNumber) == 0){
+		int cmpres = strcmp(car.plateNumber, existing_car->plateNumber);
+		if(cmpres == 0){
 			return 0;
 		}
+		i++;
 	}
 	tesla->cars = (TeslaCar**)realloc(tesla->cars, sizeof(TeslaCar*) * (1 + tesla->numCars));
 	/*Assummption: all allocations are succesful.*/
@@ -73,6 +75,7 @@ int addNewCar(TeslaDB* tesla, TeslaCar car)
 	newCar->type = (char*)malloc(sizeof(char) * (1 + strlen(car.type)));
 	strcpy_s(newCar->type,sizeof(newCar->type), car.type);
 	newCar->color = (char*)malloc(sizeof(char) * (1 + strlen(car.color)));
+	/*BUG SOURCE: HERE*/
 	strcpy_s(newCar->plateNumber, sizeof(newCar->plateNumber), car.plateNumber);
 	newCar->yearOfManufacture = car.yearOfManufacture;
 	newCar->numOfSoftwareUpdates = car.numOfSoftwareUpdates;
@@ -86,6 +89,9 @@ int addNewCar(TeslaDB* tesla, TeslaCar car)
 	for (int i = 0; i < car.numOfSoftwareUpdates; i++) {
 		newCar->software[i] = car.software[i];
 	}
+	tesla->cars = realloc(tesla->cars, (tesla->numCars + 1) * sizeof(TeslaCar*));
+	tesla->cars[tesla->numCars] = newCar;
+	tesla->numCars++;
 	return 1;//Added car to DB
 }
 void OTAUpdate(TeslaDB* tesla, Location location, float radius, SoftwareUpdate udate)

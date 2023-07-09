@@ -20,22 +20,28 @@ int main()
     SoftwareUpdate su9 = { .softwareVersion = "v.3.1.1",.date = {1,1,2022},.description = "MAJOR update 2" };
     SoftwareUpdate su10 = { .softwareVersion = "v.3.2.1",.date = {1,6,2022},.description = "minor update to MAJOR update 2" };
     SoftwareUpdate su11 = { .softwareVersion = "v.3.2.2",.date = {5,9,2022},.description = "patch update to minor update to MAJOR update 2" };
-    SoftwareUpdate teslaSoftware[11] = {su1,su2,su3,su4,su5,su6,su7,su8,su9,su10,su11};
-    TeslaDB tesla = { .cars = NULL,.numCars = 0,.numSofwareUpdaes = 11,.updates = teslaSoftware };
+    SoftwareUpdate* teslaSoftware[11] = {&su1,&su2,&su3,&su4,&su5,&su6,&su7,&su8,&su9,&su10,&su11};
+    TeslaCar** tesla_cars = NULL;
+    TeslaDB tesla = { .cars = tesla_cars,.numCars = 0,.numSofwareUpdaes = 11,.updates = &teslaSoftware };
     TeslaCar tc1 = { .batteryLevel = 100,.color = "white",.location = {.x = 0,.y = 0},.numOfSoftwareUpdates = 0,
-        .plateNumber="A55HOL3ONE",.software=NULL,.type="model s",.yearOfManufacture=2019};
+        .plateNumber="111111111",.software=NULL,.type="model s",.yearOfManufacture=2019};
     TeslaCar tc2 = { .batteryLevel = 97,.color = "silver",.location = {.x = 1000,.y = 1000},.numOfSoftwareUpdates = 0,
-        .plateNumber = "A55HOL3TWO",.software = NULL,.type = "model x",.yearOfManufacture = 2020 };
+        .plateNumber = "111111112",.software = NULL,.type = "model x",.yearOfManufacture = 2020 };
     TeslaCar tc3 = { .batteryLevel = 100,.color = "black",.location = {.x = 10000,.y = 10000},.numOfSoftwareUpdates = 0,
-        .plateNumber = "A55HOL3THD",.software = NULL,.type = "model t",.yearOfManufacture = 2021 };
+        .plateNumber = "111111113",.software = NULL,.type = "model t",.yearOfManufacture = 2021 };
     //q1
     int sum = 0;
+    sum += addNewCar(&tesla, tc1);
+    sum += addNewCar(&tesla, tc2);
+    sum += addNewCar(&tesla, tc3);
+    /*adding duplcates, should not actualy add them*/
     sum += addNewCar(&tesla, tc1);
     sum += addNewCar(&tesla, tc2);
     sum += addNewCar(&tesla, tc3);
     if (sum != 3) {
         printf("error in q3.a: addNewCar is wrong");
     }
+    printf("\n%d cars were added to the array\n", sum);
     printf("done");
     return 0;
 }
